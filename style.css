@@ -1,0 +1,124 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fbfaf7;
+  font-family: "Times New Roman", Times, Georgia, serif;
+  overflow: hidden;
+}
+
+.canvas {
+  position: relative;
+  width: min(92vw, 92vh, 680px);
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.center-message {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #0b0b0b;
+  font-weight: 400;
+  font-size: clamp(1.25rem, 4.4vw, 2.35rem);
+  line-height: 1.24;
+  letter-spacing: 0.01em;
+  user-select: none;
+}
+
+.heart {
+  position: absolute;
+  width: 31%;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.06));
+  transition: transform 0.35s ease;
+}
+
+.heart path {
+  stroke: #1a0608;
+  stroke-width: 3.6;
+  stroke-linejoin: round;
+}
+
+.heart:hover {
+  transform: scale(1.06) rotate(var(--rot));
+}
+
+/* Top-Left: Rose Pink */
+.h1 {
+  top: 5%;
+  left: 13%;
+  --rot: -24deg;
+  transform: rotate(var(--rot));
+}
+.h1 path {
+  fill: #f0538b;
+}
+
+/* Top-Right: Deep Crimson */
+.h2 {
+  top: 5%;
+  right: 13%;
+  --rot: 24deg;
+  transform: rotate(var(--rot));
+}
+.h2 path {
+  fill: #be0e3d;
+}
+
+/* Middle-Right: Hot Pink */
+.h3 {
+  top: 33%;
+  right: 1%;
+  --rot: 84deg;
+  transform: rotate(var(--rot));
+}
+.h3 path {
+  fill: #f8538a;
+}
+
+/* Bottom-Right: Coral Red */
+.h4 {
+  bottom: 5%;
+  right: 13%;
+  --rot: 145deg;
+  transform: rotate(var(--rot));
+}
+.h4 path {
+  fill: #fb585b;
+}
+
+/* Bottom-Left: Soft Pink */
+.h5 {
+  bottom: 5%;
+  left: 13%;
+  --rot: -145deg;
+  transform: rotate(var(--rot));
+}
+.h5 path {
+  fill: #fd76ae;
+}
+
+/* Middle-Left: Pure Red */
+.h6 {
+  top: 33%;
+  left: 1%;
+  --rot: -84deg;
+  transform: rotate(var(--rot));
+}
+.h6 path {
+  fill: #d70404;
+}
