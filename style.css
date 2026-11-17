@@ -5,18 +5,59 @@
 }
 
 body {
+  position: relative;
   min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #fbfaf7;
   font-family: "Times New Roman", Times, Georgia, serif;
   overflow: hidden;
+  /* Soft shaded fade mix of crisp white and blush pink */
+  background: linear-gradient(135deg, #ffffff 0%, #fce4ec 32%, #f7bfd3 65%, #fff5f8 100%);
+  background-size: 280% 280%;
+  animation: backdropShift 18s ease-in-out infinite;
 }
 
-.canvas {
+/* Soft outer shading vignette so snow and hearts have depth against the white/pink mix */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(235, 165, 190, 0.14) 62%,
+    rgba(185, 105, 135, 0.25) 100%
+  );
+  z-index: 1;
+}
+
+@keyframes backdropShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+#snow-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.stage {
   position: relative;
-  width: min(92vw, 92vh, 680px);
+  z-index: 2;
+  width: min(92vw, 92vh, 660px);
   aspect-ratio: 1 / 1;
   display: flex;
   align-items: center;
@@ -25,100 +66,101 @@ body {
 
 .center-message {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  color: #0b0b0b;
+  color: #17080c;
   font-weight: 400;
-  font-size: clamp(1.25rem, 4.4vw, 2.35rem);
-  line-height: 1.24;
-  letter-spacing: 0.01em;
+  font-size: clamp(1.25rem, 4.3vw, 2.3rem);
+  line-height: 1.25;
+  letter-spacing: 0.015em;
+  text-shadow: 0 2px 18px rgba(255, 255, 255, 0.95);
   user-select: none;
 }
 
 .heart {
   position: absolute;
-  width: 31%;
+  width: 30.5%;
   height: auto;
   overflow: visible;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.06));
-  transition: transform 0.35s ease;
+  filter: drop-shadow(0 10px 18px rgba(120, 30, 60, 0.2));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .heart path {
-  stroke: #1a0608;
-  stroke-width: 3.6;
+  stroke: #1c0508;
+  stroke-width: 3.5;
   stroke-linejoin: round;
 }
 
 .heart:hover {
-  transform: scale(1.06) rotate(var(--rot));
+  transform: scale(1.08) rotate(var(--rot));
 }
 
-/* Top-Left: Rose Pink */
+/* Top-Left: Shaded Rose Pink */
 .h1 {
   top: 5%;
-  left: 13%;
+  left: 13.5%;
   --rot: -24deg;
   transform: rotate(var(--rot));
 }
 .h1 path {
-  fill: #f0538b;
+  fill: url(#grad-h1);
 }
 
-/* Top-Right: Deep Crimson */
+/* Top-Right: Shaded Deep Crimson */
 .h2 {
   top: 5%;
-  right: 13%;
+  right: 13.5%;
   --rot: 24deg;
   transform: rotate(var(--rot));
 }
 .h2 path {
-  fill: #be0e3d;
+  fill: url(#grad-h2);
 }
 
-/* Middle-Right: Hot Pink */
+/* Middle-Right: Shaded Hot Pink */
 .h3 {
-  top: 33%;
-  right: 1%;
+  top: 33.5%;
+  right: 1.5%;
   --rot: 84deg;
   transform: rotate(var(--rot));
 }
 .h3 path {
-  fill: #f8538a;
+  fill: url(#grad-h3);
 }
 
-/* Bottom-Right: Coral Red */
+/* Bottom-Right: Shaded Coral Red */
 .h4 {
   bottom: 5%;
-  right: 13%;
+  right: 13.5%;
   --rot: 145deg;
   transform: rotate(var(--rot));
 }
 .h4 path {
-  fill: #fb585b;
+  fill: url(#grad-h4);
 }
 
-/* Bottom-Left: Soft Pink */
+/* Bottom-Left: Shaded Soft Pink */
 .h5 {
   bottom: 5%;
-  left: 13%;
+  left: 13.5%;
   --rot: -145deg;
   transform: rotate(var(--rot));
 }
 .h5 path {
-  fill: #fd76ae;
+  fill: url(#grad-h5);
 }
 
-/* Middle-Left: Pure Red */
+/* Middle-Left: Shaded Pure Red */
 .h6 {
-  top: 33%;
-  left: 1%;
+  top: 33.5%;
+  left: 1.5%;
   --rot: -84deg;
   transform: rotate(var(--rot));
 }
 .h6 path {
-  fill: #d70404;
+  fill: url(#grad-h6);
 }
