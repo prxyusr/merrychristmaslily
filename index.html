@@ -9,48 +9,77 @@
 <body>
   <canvas id="snow-canvas" aria-hidden="true"></canvas>
 
-  <main class="stage">
-    <!-- Shared SVG Gradients for Shaded Hearts -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-      <defs>
-        <radialGradient id="grad-h1" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stop-color="#ff7aa8" />
-          <stop offset="65%" stop-color="#ec4882" />
-          <stop offset="100%" stop-color="#b82559" />
-        </radialGradient>
+  <!-- Shared SVG Gradients for Shaded Hearts -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <radialGradient id="grad-h1" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#ff7aa8" />
+        <stop offset="65%" stop-color="#ec4882" />
+        <stop offset="100%" stop-color="#b82559" />
+      </radialGradient>
 
-        <radialGradient id="grad-h2" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stop-color="#e32658" />
-          <stop offset="65%" stop-color="#b50b38" />
-          <stop offset="100%" stop-color="#780422" />
-        </radialGradient>
+      <radialGradient id="grad-h2" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#e32658" />
+        <stop offset="65%" stop-color="#b50b38" />
+        <stop offset="100%" stop-color="#780422" />
+      </radialGradient>
 
-        <radialGradient id="grad-h3" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stop-color="#ff7ba7" />
-          <stop offset="65%" stop-color="#f24982" />
-          <stop offset="100%" stop-color="#bd2458" />
-        </radialGradient>
+      <radialGradient id="grad-h3" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#ff7ba7" />
+        <stop offset="65%" stop-color="#f24982" />
+        <stop offset="100%" stop-color="#bd2458" />
+      </radialGradient>
 
-        <radialGradient id="grad-h4" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stop-color="#ff8082" />
-          <stop offset="65%" stop-color="#f54e52" />
-          <stop offset="100%" stop-color="#bd2629" />
-        </radialGradient>
+      <radialGradient id="grad-h4" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#ff8082" />
+        <stop offset="65%" stop-color="#f54e52" />
+        <stop offset="100%" stop-color="#bd2629" />
+      </radialGradient>
 
-        <radialGradient id="grad-h5" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stop-color="#ff9ec7" />
-          <stop offset="65%" stop-color="#f76da6" />
-          <stop offset="100%" stop-color="#c43b74" />
-        </radialGradient>
+      <radialGradient id="grad-h5" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#ff9ec7" />
+        <stop offset="65%" stop-color="#f76da6" />
+        <stop offset="100%" stop-color="#c43b74" />
+      </radialGradient>
 
-        <radialGradient id="grad-h6" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stop-color="#ff3333" />
-          <stop offset="65%" stop-color="#cc0404" />
-          <stop offset="100%" stop-color="#850000" />
-        </radialGradient>
-      </defs>
-    </svg>
+      <radialGradient id="grad-h6" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#ff3333" />
+        <stop offset="65%" stop-color="#cc0404" />
+        <stop offset="100%" stop-color="#850000" />
+      </radialGradient>
+    </defs>
+  </svg>
 
+  <!-- Interactive Present Intro Screen -->
+  <section id="present-screen" class="present-screen" aria-label="Christmas Gift">
+    <div class="gift-container" id="gift-box" role="button" tabindex="0" aria-label="Tap gift to open">
+      <div class="gift-lid" id="gift-lid">
+        <div class="gift-bow">
+          <span class="bow-loop left"></span>
+          <span class="bow-loop right"></span>
+          <span class="bow-knot"></span>
+        </div>
+        <div class="lid-ribbon"></div>
+      </div>
+      <div class="gift-box-body">
+        <div class="box-ribbon-v"></div>
+        <div class="box-ribbon-h"></div>
+      </div>
+      <div class="gift-shadow"></div>
+    </div>
+
+    <p class="gift-prompt" id="gift-prompt">Tap to unwrap your gift</p>
+    <div class="tap-dots" id="tap-dots" aria-hidden="true">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </section>
+
+  <!-- Main Reveal Stage -->
+  <main class="stage stage-hidden" id="main-stage">
     <!-- 6 Radial Hearts -->
     <svg class="heart h1" viewBox="0 0 120 110" aria-hidden="true">
       <path d="M60 100 C60 100 10 68 10 34 C10 15 26 6 42 12 C51 15 57 23 60 30 C63 23 69 15 78 12 C94 6 110 15 110 34 C110 68 60 100 60 100 Z" />
@@ -84,24 +113,36 @@
   </main>
 
   <script>
+    /* --- Snow Canvas (White, Grey, Pink Gradients) --- */
     const canvas = document.getElementById("snow-canvas");
     const ctx = canvas.getContext("2d");
     let width, height, flakes;
+
+    const snowPalette = [
+      { core: [255, 255, 255], edge: [156, 163, 175] }, // Crisp white with cool grey rim
+      { core: [209, 213, 219], edge: [107, 114, 128] }, // Soft silver-grey
+      { core: [244, 114, 182], edge: [190, 24, 93] },   // Medium rose-pink
+      { core: [255, 228, 238], edge: [219, 39, 119] }   // Pale blush white with deep pink edge
+    ];
 
     function initSnow() {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
       const count = Math.min(Math.floor((width * height) / 9000), 140);
 
-      flakes = Array.from({ length: count }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        r: Math.random() * 3.2 + 1.2,
-        speedY: (Math.random() * 1.1 + 0.45) * 0.5,
-        drift: Math.random() * Math.PI * 2,
-        driftSpeed: (Math.random() * 0.015 + 0.005) * 0.5,
-        opacity: Math.random() * 0.5 + 0.45
-      }));
+      flakes = Array.from({ length: count }, (_, i) => {
+        const tint = snowPalette[i % snowPalette.length];
+        return {
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 3.4 + 1.6,
+          speedY: (Math.random() * 1.1 + 0.45) * 0.5,
+          drift: Math.random() * Math.PI * 2,
+          driftSpeed: (Math.random() * 0.015 + 0.005) * 0.5,
+          opacity: Math.random() * 0.35 + 0.55,
+          tint
+        };
+      });
     }
 
     function drawSnow() {
@@ -119,11 +160,13 @@
         if (f.x > width + 10) f.x = -10;
         if (f.x < -10) f.x = width + 10;
 
-        // Soft shaded snowflake with subtle rose-silver edge so it shows up on white/pink
+        const [cr, cg, cb] = f.tint.core;
+        const [er, eg, eb] = f.tint.edge;
+
         const grad = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r);
-        grad.addColorStop(0, `rgba(255, 255, 255, ${f.opacity})`);
-        grad.addColorStop(0.65, `rgba(255, 244, 248, ${f.opacity * 0.85})`);
-        grad.addColorStop(1, "rgba(215, 165, 185, 0)");
+        grad.addColorStop(0, `rgba(${cr}, ${cg}, ${cb}, ${f.opacity})`);
+        grad.addColorStop(0.7, `rgba(${er}, ${eg}, ${eb}, ${f.opacity * 0.65})`);
+        grad.addColorStop(1, `rgba(${er}, ${eg}, ${eb}, 0)`);
 
         ctx.beginPath();
         ctx.fillStyle = grad;
@@ -137,6 +180,101 @@
     window.addEventListener("resize", initSnow);
     initSnow();
     drawSnow();
+
+    /* --- Present Unwrap Logic --- */
+    const presentScreen = document.getElementById("present-screen");
+    const giftBox = document.getElementById("gift-box");
+    const giftPrompt = document.getElementById("gift-prompt");
+    const dots = document.querySelectorAll("#tap-dots .dot");
+    const mainStage = document.getElementById("main-stage");
+
+    const REQUIRED_TAPS = 5;
+    let taps = 0;
+    let isOpened = false;
+
+    const messages = [
+      "Tap to unwrap your gift",
+      "Keep tapping...",
+      "The ribbon is loosening!",
+      "Almost open...",
+      "One more tap!"
+    ];
+
+    function spawnMiniHearts(x, y, count) {
+      const colors = ["#ff7aa8", "#e32658", "#ff3333", "#f76da6"];
+      for (let i = 0; i < count; i++) {
+        const heart = document.createElement("span");
+        heart.className = "burst-heart";
+        heart.textContent = "♥";
+        heart.style.left = `${x}px`;
+        heart.style.top = `${y}px`;
+        heart.style.color = colors[i % colors.length];
+
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
+        const distance = 60 + Math.random() * 90;
+        heart.style.setProperty("--tx", `${Math.cos(angle) * distance}px`);
+        heart.style.setProperty("--ty", `${Math.sin(angle) * distance - 30}px`);
+        heart.style.setProperty("--rot", `${(Math.random() - 0.5) * 60}deg`);
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 900);
+      }
+    }
+
+    function handleGiftClick(e) {
+      if (isOpened) return;
+
+      taps++;
+      const rect = giftBox.getBoundingClientRect();
+      const clickX = e.clientX || rect.left + rect.width / 2;
+      const clickY = e.clientY || rect.top + rect.height / 2;
+
+      if (dots[taps - 1]) {
+        dots[taps - 1].classList.add("active");
+      }
+
+      giftBox.classList.remove("shake-1", "shake-2", "shake-3", "shake-4");
+      void giftBox.offsetWidth;
+
+      if (taps < REQUIRED_TAPS) {
+        giftBox.classList.add(`shake-${taps}`);
+        giftPrompt.textContent = messages[taps];
+        spawnMiniHearts(clickX, clickY, 4 + taps);
+
+        // Loosens ribbon on tap 3 when "The ribbon is loosening!" appears
+        if (taps >= 3) {
+          giftBox.classList.add("bow-loose");
+        }
+        if (taps >= 4) {
+          giftBox.classList.add("lid-peek");
+        }
+      } else {
+        isOpened = true;
+        giftPrompt.style.opacity = "0";
+        document.getElementById("tap-dots").style.opacity = "0";
+
+        giftBox.classList.add("opened");
+        spawnMiniHearts(rect.left + rect.width / 2, rect.top + rect.height / 2, 24);
+
+        setTimeout(() => {
+          presentScreen.classList.add("fade-out");
+          mainStage.classList.remove("stage-hidden");
+          mainStage.classList.add("stage-revealed");
+        }, 550);
+
+        setTimeout(() => {
+          presentScreen.remove();
+        }, 1400);
+      }
+    }
+
+    giftBox.addEventListener("click", handleGiftClick);
+    giftBox.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        handleGiftClick(e);
+      }
+    });
   </script>
 </body>
 </html>
